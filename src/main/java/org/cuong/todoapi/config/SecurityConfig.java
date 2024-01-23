@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,13 +20,7 @@ public class SecurityConfig {
     
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(c -> c.disable());
-        http.authorizeHttpRequests(c -> {
-            // c.requestMatchers(HttpMethod.POST,"/api/todos/**").hasRole("ADMIN");
-            // c.requestMatchers(HttpMethod.PUT,"/api/todos/**").hasRole("ADMIN");
-            // c.requestMatchers(HttpMethod.DELETE,"/api/todos/**").hasRole("ADMIN");
-            c.anyRequest().authenticated();
-        });
+        http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(Customizer.withDefaults());
         return http.build();
     }
