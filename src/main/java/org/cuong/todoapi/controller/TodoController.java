@@ -4,6 +4,7 @@ import org.cuong.todoapi.dto.TodoDto;
 import org.cuong.todoapi.service.TodoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class TodoController {
         this.todoService = todoService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TodoDto> addTodo(@RequestBody TodoDto todoDto) {
         TodoDto saveTodoDto = todoService.addTodo(todoDto);
