@@ -2,7 +2,7 @@ package org.cuong.todoapi.controller;
 
 import org.cuong.todoapi.dto.LoginDto;
 import org.cuong.todoapi.dto.RegisterDto;
-import org.cuong.todoapi.security.AuthService;
+import org.cuong.todoapi.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

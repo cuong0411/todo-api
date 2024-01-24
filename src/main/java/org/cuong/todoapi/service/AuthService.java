@@ -1,4 +1,4 @@
-package org.cuong.todoapi.security;
+package org.cuong.todoapi.service;
 
 import org.cuong.todoapi.dto.LoginDto;
 import org.cuong.todoapi.dto.RegisterDto;
