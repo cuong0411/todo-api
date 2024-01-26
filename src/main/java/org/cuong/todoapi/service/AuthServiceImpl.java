@@ -3,6 +3,7 @@ package org.cuong.todoapi.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.cuong.todoapi.dto.JwtAuthToken;
 import org.cuong.todoapi.dto.LoginDto;
 import org.cuong.todoapi.dto.RegisterDto;
 import org.cuong.todoapi.entity.Role;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +67,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String login(LoginDto loginDto) {
+    public JwtAuthToken login(LoginDto loginDto) {
         Authentication authentication  = null;
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -76,7 +78,14 @@ public class AuthServiceImpl implements AuthService{
             throw new TodoApiException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return jwtTokenProvider.generateToken(authentication);
+
+        var jwtAuthToken = new JwtAuthToken();
+        String token = jwtTokenProvider.generateToken(authentication);
+        String roleName = authentication.getAuthorities().stream().findFirst().orElseThrow().getAuthority();
+        jwtAuthToken.setAccessToken(token);
+        jwtAuthToken.setRole(roleName);
+
+        return jwtAuthToken;
     }
     
 }
