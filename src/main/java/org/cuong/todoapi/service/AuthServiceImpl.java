@@ -11,6 +11,7 @@ import org.cuong.todoapi.exception.RoleNotFoundByName;
 import org.cuong.todoapi.exception.TodoApiException;
 import org.cuong.todoapi.repository.RoleRepository;
 import org.cuong.todoapi.repository.UserRepository;
+import org.cuong.todoapi.security.JwtTokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,13 +28,15 @@ public class AuthServiceImpl implements AuthService{
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+                           PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class AuthServiceImpl implements AuthService{
             throw new TodoApiException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User logged in successfully!";
+        return jwtTokenProvider.generateToken(authentication);
     }
     
 }

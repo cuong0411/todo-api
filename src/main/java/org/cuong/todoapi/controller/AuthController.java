@@ -2,6 +2,7 @@ package org.cuong.todoapi.controller;
 
 import org.cuong.todoapi.dto.LoginDto;
 import org.cuong.todoapi.dto.RegisterDto;
+import org.cuong.todoapi.dto.JwtAuthToken;
 import org.cuong.todoapi.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
-        String result = authService.login(loginDto);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+    public ResponseEntity<JwtAuthToken> login(@RequestBody LoginDto loginDto) {
+        String token = authService.login(loginDto);
+        var jwtAuthToken = new JwtAuthToken();
+        jwtAuthToken.setAccessToken(token);
+        return ResponseEntity.status(HttpStatus.OK).body(jwtAuthToken);
     }
 }
